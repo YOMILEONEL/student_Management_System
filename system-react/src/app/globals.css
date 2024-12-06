@@ -14,6 +14,25 @@
   }
 }
 
+.appName{
+  display: flex;
+  justify-content: center;
+}
+
+.input button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.general{
+  
+  display: flex;
+  justify-content: center; 
+  flex-direction: column;
+  align-items: center;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
