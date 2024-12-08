@@ -1,8 +1,9 @@
 "use client";
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import { Button, Paper } from '@mui/material';
+import * as React from "react";
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import { Button, Paper } from "@mui/material";
+import StudentTable from "./studentTable";
 
 interface Student {
   id: number;
@@ -27,12 +28,29 @@ export default function Student() {
       });
 
       if (response.ok) {
-        console.log(student);
         console.log("New Student added");
-        // Reload students list after adding
         fetchStudents();
       } else {
         console.error("Failed to add student");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    setName("");
+    setAddress("");
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(`http://localhost:8080/student/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("Student deleted");
+        fetchStudents();
+      } else {
+        console.error("Failed to delete student");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -53,44 +71,57 @@ export default function Student() {
     fetchStudents();
   }, []);
 
-
   return (
-    <div className='general'>
-      <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }}>
-        <h1 className='title'>Add new Student</h1>
-        <div className='input'>
-          <TextField
-            id="student-name"
-            label="Student Name"
-            variant="outlined"
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            id="student-address"
-            label="Student Address"
-            variant="outlined"
-            fullWidth
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <Button variant="contained" onClick={handleAddStudent}>Submit</Button>
-        </div>
-      </Paper>
-      <Paper>
-        <h1>Students</h1>
-        <div>
-          {students.map(student => (
-            <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={student.id}>
-              Id: {student.id}<br />
-              Name: {student.name}<br />
-              Address: {student.address}<br />
-              <Button variant="contained" color='error'>Delete</Button>
-            </Paper>
-          ))}
-        </div>
-      </Paper>
+    <div className="general">
+      <Paper 
+  elevation={6} 
+  sx={{ 
+    margin: "20px auto", 
+    padding: "30px", 
+    textAlign: "center", 
+    maxWidth: 500, 
+    backgroundColor: "#f9f9f9", 
+    borderRadius: "10px" 
+  }}
+>
+  <h1 className="title" style={{ fontSize: "24px", marginBottom: "20px", color: "#333" }}>
+    Add New Student
+  </h1>
+  <form className="input" style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+    <TextField
+      id="student-name"
+      label="Student Name"
+      variant="outlined"
+      fullWidth
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+    />
+    <TextField
+      id="student-address"
+      label="Student Address"
+      variant="outlined"
+      fullWidth
+      value={address}
+      onChange={(e) => setAddress(e.target.value)}
+    />
+    <Button 
+      variant="contained" 
+      onClick={handleAddStudent}
+      sx={{
+        padding: "10px",
+        fontWeight: "bold",
+        backgroundColor: "#1976d2",
+        "&:hover": {
+          backgroundColor: "#145a96"
+        }
+      }}
+    >
+      Submit
+    </Button>
+  </form>
+</Paper>
+
+      <StudentTable students={students} onDelete={handleDelete} />
     </div>
   );
 }

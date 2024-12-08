@@ -16,8 +16,7 @@ import java.util.Optional;
 public class StudentController {
     @Autowired
     private StudentService studentService;
-    @Autowired
-    private StudentRepository studentRepository;
+
 
     @PostMapping("/add")
     public String add(@RequestBody Student student) {
@@ -30,14 +29,9 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-    @DeleteMapping("/move/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable  int id) {
-        Optional<Student> student = studentRepository.findById(id);
-
-        if (student.isPresent()) {
-            studentRepository.delete(student.get());
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @DeleteMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable  int id) {
+        studentService.deleteStudent(id);
+        return "Student deleted";
     }
 }
